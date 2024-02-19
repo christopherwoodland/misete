@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Misete.Azure.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7261"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 33668,
+      "useSSL": false
+    }
+  }
+}
