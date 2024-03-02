@@ -1,15 +1,20 @@
 namespace Misete.Functions
 {
-    public class ImageAnalysis
+    public class Images
     {
         private readonly ILogger _logger;
+        private readonly IBlobHelper _bh;
         private readonly IImageAnalysisHelper _iiah;
         private readonly IMapsHelper _imh;
-        public ImageAnalysis(ILoggerFactory loggerFactory, IImageAnalysisHelper iiah, IMapsHelper imh)
+        private readonly IAppConfigurationHelper _appConfiguration;
+        public Images(ILoggerFactory loggerFactory, IBlobHelper bh, IImageAnalysisHelper iiah, IMapsHelper imh, 
+            IAppConfigurationHelper appConfiguration)
         {
-            _logger = loggerFactory.CreateLogger<ImageAnalysis>();
+            _logger = loggerFactory.CreateLogger<Images>();
+            _bh = bh;
             _iiah = iiah;
             _imh = imh;
+            _appConfiguration = appConfiguration;
         }
 
         [Function("GetImageDetails")]
@@ -97,5 +102,77 @@ namespace Misete.Functions
                 }
             }
         }
+        
+        [Function("DownloadImage")]
+        public Task<IActionResult> DownloadImage([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("DownloadImage: C# HTTP trigger function processed a request.");
+            try
+            {
+                string fileName = req.Query["fileName"];
+                string containerName = req.Query["containerName"];
+                string imageUrl = req.Query["imageUrl"];
+                string photoId = req.Query["photoId"];
+                if (String.IsNullOrEmpty(fileName) || String.IsNullOrEmpty(containerName) || String.IsNullOrEmpty(imageUrl))
+                    return Task.FromResult<IActionResult>(new BadRequestObjectResult($"GetImageDetails: fileName|containerName|imageUrl is null or empty."));
+
+                Task<bool> ret = _bh.DownloadFile(imageUrl, fileName, containerName, photoId);
+                _logger.LogInformation($"DownloadImage Returns: {ret}");
+                return Task.FromResult<IActionResult>(new OkObjectResult(ret.Result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DownloadImage Returns: {ex.Message}");
+                return Task.FromResult<IActionResult>(new BadRequestObjectResult(ex));
+            }
+        }
+
+
+        [Function("DownloadImagesFromDB")]
+        public async Task<IActionResult> DownloadImagesFromDB([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("DownloadImagesFromDB: C# HTTP trigger function processed a request.");
+            try
+            {
+                string tableName = req.Query["tableName"];
+           
+                if (String.IsNullOrEmpty(tableName))
+                    return new BadRequestObjectResult($"DownloadImagesFromDB: tableName is null or empty.");
+                var cs = _appConfiguration.MISETE_STORAGE_ACCNT_PRIMARY_CONNECTION_STRING;
+                Task<bool> ret = _bh.DownloadImagesFromDB(cs, tableName);
+                _logger.LogInformation($"DownloadImagesFromDB Returns: {ret}");
+                return new OkObjectResult(ret.Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DownloadImagesFromDB Returns: {ex.Message}");
+                return new BadRequestObjectResult(ex);
+            }
+        }
+
+        [Function("DownloadImagesFromDBPostGres")]
+        public async Task<IActionResult> DownloadImagesFromDBPostGres([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("DownloadImagesFromDBPostGres: C# HTTP trigger function processed a request.");
+            try
+            {
+                string tableName = req.Query["tableName"];
+
+                if (String.IsNullOrEmpty(tableName))
+                    return new BadRequestObjectResult($"DownloadImagesFromDBPostGres: tableName is null or empty.");
+                var cs = _appConfiguration.MISETE_POSTGRES_DB_PRIMARY_CONNECTION_STRING;
+                Task<bool> ret = _bh.DownloadImagesFromDBPostGres(cs, tableName);
+                
+
+                _logger.LogInformation($"DownloadImagesFromDBPostGres Returns: {ret}");
+                return new OkObjectResult(ret.Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"DownloadImagesFromDBPostGres Returns: {ex.Message}");
+                return new BadRequestObjectResult(ex);
+            }
+        }
+
     }
 }

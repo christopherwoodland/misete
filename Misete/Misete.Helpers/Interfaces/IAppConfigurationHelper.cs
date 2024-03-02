@@ -18,6 +18,11 @@
         public string AZUREMAPS_AUTH_KEY { get; }
         public string AZUREMAPS_CLIENT_ID { get; }
         public string AZUREMAPS_BASE_URL { get; }
+        public string MISETE_STORAGE_ACCNT_PRIMARY_KEY   { get; }
+        public string MISETE_STORAGE_ACCNT_PRIMARY_NAME { get; }
+        public string MISETE_STORAGE_ACCNT_PRIMARY_CONNECTION_STRING  { get;}
+        public string MISETE_POSTGRES_DB_PRIMARY_CONNECTION_STRING { get; }
+        public string MISETE_SQL_DB_PRIMARY_CONNECTION_STRING { get; }
         public Task<bool> RefreshConfiguration();
         public IConfiguration GetConfiguration();
     }

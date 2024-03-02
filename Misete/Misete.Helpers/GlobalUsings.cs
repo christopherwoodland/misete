@@ -7,3 +7,8 @@ global using Misete.Models;
 global using CoordinateSharp;
 global using MetadataExtractor;
 global using Python.Runtime;
+global using Azure.Storage.Blobs;
+global using System.Reflection.PortableExecutable;
+global using System.Data.SqlClient;
+global using Azure;
+ 

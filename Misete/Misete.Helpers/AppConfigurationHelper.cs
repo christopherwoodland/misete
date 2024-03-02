@@ -38,6 +38,16 @@
         public string AZUREMAPS_AUTH_KEY => _configuration["AZUREMAPS:AUTH_KEY"];
         public string AZUREMAPS_CLIENT_ID => _configuration["AZUREMAPS:CLIENT_ID"];
         public string AZUREMAPS_BASE_URL => _configuration["AZUREMAPS:BASE_URL"];
+
+        public string MISETE_STORAGE_ACCNT_PRIMARY_KEY => _configuration["MISETE:STORAGE_ACCNT_PRIMARY_KEY"];
+
+        public string MISETE_STORAGE_ACCNT_PRIMARY_NAME => _configuration["MISETE:STORAGE_ACCNT_PRIMARY_NAME"];
+
+        public string MISETE_STORAGE_ACCNT_PRIMARY_CONNECTION_STRING => _configuration["MISETE:STORAGE_ACCNT_PRIMARY_CONNECTION_STRING"];
+
+        public string MISETE_SQL_DB_PRIMARY_CONNECTION_STRING =>_configuration["MISETE:SQL_DB_PRIMARY_CONNECTION_STRING"]; 
+        public string MISETE_POSTGRES_DB_PRIMARY_CONNECTION_STRING => _configuration["MISETE:POSTGRES_DB_PRIMARY_CONNECTION_STRING"];
+
         #endregion
         public async Task<bool> RefreshConfiguration()
         {

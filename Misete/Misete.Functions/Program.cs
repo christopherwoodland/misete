@@ -4,21 +4,18 @@ var host = new HostBuilder()
     var settings = config.Build();
     config.AddAzureAppConfiguration(options =>
     {
-        options.Connect(Environment.GetEnvironmentVariable("AppConfig"))
+        options.Connect(Environment.GetEnvironmentVariable("AZURE_APP_CONFIG"))
         .Select("OPENAI:*")
         .Select("COSMOSDB:*")
         .Select("COGSERVICE:*")
         .Select("DOCINTELL:*")
         .Select("CUSTOMVISION:*")
         .Select("AZUREMAPS:*")
-        .ConfigureRefresh(refreshOptions =>
-     refreshOptions.Register("OPENAI:OAI_EMBEDDINGS_DEPLOYMENT_NAME", refreshAll: true))
- .ConfigureRefresh(refreshOptions =>
-     refreshOptions.Register("OPENAI:OAI_END_POINT", refreshAll: true))
- .ConfigureRefresh(refreshOptions =>
-     refreshOptions.Register("OPENAI:OAI_KEY", refreshAll: true))
- .ConfigureRefresh(refreshOptions =>
-     refreshOptions.Register("OPENAI:MAX_TOKENS", refreshAll: true));
+        .Select("MISETE:*")
+        .ConfigureRefresh(refreshOptions => refreshOptions.Register("OPENAI:OAI_EMBEDDINGS_DEPLOYMENT_NAME", refreshAll: true))
+        .ConfigureRefresh(refreshOptions => refreshOptions.Register("OPENAI:OAI_END_POINT", refreshAll: true))
+        .ConfigureRefresh(refreshOptions => refreshOptions.Register("OPENAI:OAI_KEY", refreshAll: true))
+        .ConfigureRefresh(refreshOptions => refreshOptions.Register("OPENAI:MAX_TOKENS", refreshAll: true));
     });
 })
     .ConfigureFunctionsWebApplication()
@@ -30,7 +27,7 @@ var host = new HostBuilder()
         s.AddScoped<IAppConfigurationHelper, AppConfigurationHelper>();
         s.AddScoped<IImageAnalysisHelper, ImageAnalysisHelper>();
         s.AddScoped<IMapsHelper, MapsHelper>();
-
+        s.AddScoped<IBlobHelper, BlobHelper>();
         s.Configure<LoggerFilterOptions>(options =>
         {
             // The Application Insights SDK adds a default logging filter that instructs ILogger to capture only Warning and more severe logs. Application Insights requires an explicit override.
@@ -44,4 +41,4 @@ var host = new HostBuilder()
         });
     })
     .Build();
-await host.RunAsync();
+host.Run();

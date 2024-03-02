@@ -9,7 +9,7 @@
       "enableLiveMetricsFilters": true
 
     },
-    "functionTimeout": "00:120:00",
+    "functionTimeout": "00:520:00",
     "logLevel": {
       "default": "Information"
     }

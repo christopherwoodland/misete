@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Misete.Helpers
+﻿namespace Misete.Helpers
 {
     public class MapsHelper : IMapsHelper
     {

@@ -10,7 +10,7 @@ namespace Misete.Helpers
         {
             _logger = loggerFactory.CreateLogger<ImageAnalysisHelper>();
             _appConfiguration = appConfiguration;
-            InitPython();
+            //InitPython();
         }
         public IEnumerable<ImageAnalysisModel> GetImageDetails(byte[] imageBytes)
         {
